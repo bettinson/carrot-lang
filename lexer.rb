@@ -1,5 +1,13 @@
 require 'byebug'
 
+class Token
+  attr_accessor :value, :type
+  def initialize(value, type)
+    @value = value
+    @type = type
+  end
+end
+
 class Lexer
   def self.lex(string)
     tokens = []
@@ -11,29 +19,37 @@ class Lexer
       when '{'
         if current_word[0] == '{'
           current_word << s
-          tokens << current_word
+          token = Token.new(current_word, :begin_bracket) unless current_word == ""
+          tokens << token
           current_word = ""
-        elsif current_word[0] != '}' && current_word.length != 0
-          tokens << current_word
+        elsif current_word[0] != '{'
+          token = Token.new(current_word, :word) unless current_word == ""
+          tokens << token
           current_word = ""
           current_word << s
         end
       when '}'
         if current_word[0] == '}'
           current_word << s
-          tokens << current_word
+          tokens << Token.new(current_word, :end_bracket) unless current_word == ""
           current_word = ""
         elsif current_word[0] != '}' && current_word.length != 0
-          tokens << current_word
+          # Got to end of bracket, add word we've go
+          token = Token.new(current_word, :word) unless current_word == ""
+          tokens << token
           current_word = ""
           current_word << s
         else
           current_word << s
         end
       when '='
-        tokens << current_word
+        tokens << Token.new(current_word, :word) unless current_word == ""
         current_word = ""
-        tokens << s
+        tokens << Token.new(s, :equals)
+      when '.'
+        tokens << Token.new(current_word, :word) unless current_word == ""
+        current_word = ""
+        tokens << Token.new(s, :dot)
       else
         puts s
         raise Exception.new("Invalid character")
@@ -43,8 +59,8 @@ class Lexer
   end
 end
 
-toks = Lexer.lex("Lol{{Hey = lol}}")
+toks = Lexer.lex("{{photo.path  = hey}}")
 
 toks.each do |s|
-  puts s
+  puts s.value + "\t" + s.type.to_s unless s.class != Token
 end
