@@ -60,6 +60,10 @@ class Lexer
         tokens << Token.new(current_word, :variable) unless current_word == ""
         current_word = ""
         tokens << Token.new(s, :quote)
+      when ','
+        tokens << Token.new(current_word, :word) unless current_word == ""
+        current_word = ""
+        tokens << Token.new(s, :comma)
       else
         puts s
         raise Exception.new("Invalid character")
