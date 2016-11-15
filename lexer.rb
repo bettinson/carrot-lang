@@ -57,7 +57,7 @@ class Lexer
         current_word = ""
         tokens << Token.new(s, :dot)
       when '"'
-        tokens << Token.new(current_word, :word) unless current_word == ""
+        tokens << Token.new(current_word, :variable) unless current_word == ""
         current_word = ""
         tokens << Token.new(s, :quote)
       else
@@ -69,8 +69,8 @@ class Lexer
   end
 end
 
-toks = Lexer.lex('{{title = "Matt\'s blog"}}')
-
-toks.each do |s|
-  puts s.value + "\t" + s.type.to_s unless s.class != Token
-end
+# toks = Lexer.lex('{{title = "Matt\'s blog"}}')
+#
+# toks.each do |s|
+#   puts s.value + "\t" + s.type.to_s unless s.class != Token
+# end
