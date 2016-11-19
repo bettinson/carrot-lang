@@ -1,4 +1,4 @@
-require 'byebug'
+# require 'byebug'
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 require './lexer.rb'

@@ -1,4 +1,4 @@
-require 'byebug'
+# require 'byebug'
 
 class Token
   attr_accessor :value, :type
@@ -64,9 +64,9 @@ class Lexer
         tokens << Token.new(current_word, :word) unless current_word == ""
         current_word = ""
         tokens << Token.new(s, :comma)
-      else
-        puts s
-        raise Exception.new("Invalid character")
+      else 
+        tokens << Token.new(current_word, :non_syntax) unless current_word == ""
+        current_word = ""
       end
     end
     return tokens
