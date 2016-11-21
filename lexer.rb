@@ -5,11 +5,14 @@ class Token
   def initialize(value, type)
     @value = value
     @type = type
+
   end
 end
 
 class Lexer
   def self.lex(string)
+    @reserved_words = Hash.new
+    @reserved_words["photos"] = true
     tokens = []
     current_word = ""
     inQuotes = false
@@ -56,6 +59,10 @@ class Lexer
         tokens << Token.new(current_word, :word) unless current_word == ""
         current_word = ""
         tokens << Token.new(s, :dot)
+      when '\n'
+        tokens << Token.new(current_word, :word) unless current_word == ""
+        current_word = ""
+        tokens << Token.new(s, :new_line)
       when '"'
         tokens << Token.new(current_word, :variable) unless current_word == ""
         current_word = ""

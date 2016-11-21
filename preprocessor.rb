@@ -1,26 +1,49 @@
+require 'byebug'
 require './lexer.rb'
 
 class PreProcessor
-
-  def initialize
-  end
-
   def self.process_file(filepath)
+    @all_tokens = Array.new
     @hash = Hash.new
     @processed_lines = Array.new
-    file=File.open(filepath).read
-    file.each_line do |line|
+
+    input_file=File.open(filepath).read
+
+    input_file.each_line do |line|
       process_line(line)
+    end
+    @all_tokens.each do |s|
+      puts s.value + "\t" + s.type.to_s unless s.class != Token
     end
     return @hash
   end
 
-  def self.process_line(line)
-    tokens = Lexer.lex line
-    @processed_lines << create_hash_map_of_variables(tokens)
+  def self.create_html_from_crt(filepath)
+    hash_table = process_file(filepath)
+    name = File.basename(filepath, ".html.crt")
+
+    input_file=File.open(filepath).read
+
+    index = 0
+    File.open(name + ".html", 'w') do |f|
+      @all_tokens.each do |t|
+        f << t.value.to_s
+        if t.type == :non_syntax or t.type == :end_bracket
+          f << "\n"
+        end
+      end
+    end
   end
 
   private
+  def self.process_line(line)
+    tokens = Lexer.lex line
+    tokens.select{|c| c.class == Token }.each do |s|
+      @all_tokens << s
+    end
+    @processed_lines << create_hash_map_of_variables(tokens)
+  end
+
   def self.create_hash_map_of_variables(tokens)
     current_variable_name = nil
     current_variable_content = nil
@@ -50,10 +73,8 @@ class PreProcessor
   end
 end
 
-puts PreProcessor.process_file("test.html.crt")
+PreProcessor.create_html_from_crt("test.html.crt")
 
 # PreProcessor.process_line('{{var = "Matt", var, name = "mat", var = "Hey", var}}')
 
-# output.each do |s|
-#   puts s.value + "\t" + s.type.to_s unless s.class != Token
-# end
+
