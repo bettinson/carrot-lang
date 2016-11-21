@@ -16,6 +16,7 @@ class Lexer
     tokens = []
     current_word = ""
     inQuotes = false
+    inTag = false
     string.split('').select.each do |s|
       case s
       when /^[[:alpha:]]$/ # Is letters
@@ -25,6 +26,18 @@ class Lexer
         current_word << s
       when ' '
         current_word << s unless !inQuotes
+      when '<'
+        current_word << s
+        inTag = true
+      when '/'
+        current_word << s
+      when '>'
+        if inTag
+          current_word << s
+          tokens << Token.new(current_word, :html_tag) unless current_word == ""
+          current_word = ""
+        end
+        inTag = false
       when '{'
         if current_word[0] == '{'
           current_word << s
@@ -67,14 +80,10 @@ class Lexer
         tokens << Token.new(current_word, :variable) unless current_word == ""
         current_word = ""
         tokens << Token.new(s, :quote)
-      when ' '
-        tokens << Token.new(current_word, :variable) unless current_word == ""
-        current_word = ""
-        tokens << Token.new(s, :word)
       when ','
         tokens << Token.new(current_word, :word) unless current_word == ""
         current_word = ""
-        tokens << Token.new(s, :comma)
+        tokens << Token.new(s, :word)
       else 
         tokens << Token.new(current_word, :non_syntax) unless current_word == ""
         current_word = ""

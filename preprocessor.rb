@@ -33,21 +33,27 @@ class PreProcessor
         next_token = @all_tokens[index+1] unless @all_tokens[index+1].nil?
         if t.type == :word
           if hash_table.has_key?(t.value)
+            # Ignore if variable is an assignment, because we already have the values
+            # Not the best way to do this.
             if next_token.type != :equals
-              f <<  hash_table[t.value.to_s]
+              f << " " << hash_table[t.value.to_s]
             end
           else
-            f << t.value.to_s
+            if t.value == ',' or t.value == "'"
+              f << t.value.to_s 
+            else
+              f << " " << t.value.to_s
+            end
           end
         end
-        if t.type == :non_syntax 
+        if t.type == :html_tag 
           # f << "\n"
           if html_stack.last == t.value
             html_stack.pop 
-            f <<  '</' + t.value.to_s + '>'
+            f <<  t.value.to_s
           else
             html_stack << t.value
-            f <<  '<' + t.value.to_s + '>'
+            f <<  t.value.to_s
           end
         # else # TODO: Don't add variable declarations
         #   f << t.value.to_s 
