@@ -17,6 +17,9 @@ class LexerTest < Test::Unit::TestCase
 end
 
 class PreProcessorTest < Test::Unit::TestCase
+  def setup
+    
+  end
   def test_basic_var_assignment
     test_hash = Hash.new
     test_hash["var"] = "Matt"

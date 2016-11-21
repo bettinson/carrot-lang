@@ -24,10 +24,35 @@ class PreProcessor
 
     input_file=File.open(filepath).read
 
+    # Uses stack to create HTML tags. 
+    html_stack = Array.new
+
     index = 0
     File.open(name + ".html", 'w') do |f|
-      @all_tokens.each do |t|
-        f << t.value.to_s
+      @all_tokens.each_with_index do |t, index|
+        next_token = @all_tokens[index+1] unless @all_tokens[index+1].nil?
+        if t.type == :word
+          if hash_table.has_key?(t.value)
+            if next_token.type != :equals
+              f <<  hash_table[t.value.to_s]
+            end
+          else
+            f << t.value.to_s
+          end
+        end
+        if t.type == :non_syntax 
+          # f << "\n"
+          if html_stack.last == t.value
+            html_stack.pop 
+            f <<  '</' + t.value.to_s + '>'
+          else
+            html_stack << t.value
+            f <<  '<' + t.value.to_s + '>'
+          end
+        # else # TODO: Don't add variable declarations
+        #   f << t.value.to_s 
+        # end
+      end
         if t.type == :non_syntax or t.type == :end_bracket
           f << "\n"
         end

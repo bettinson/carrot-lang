@@ -11,8 +11,8 @@ Embed carrot in html between `{{ }}`. Note, this does not work at all yet. Like,
   {{ name = "Matt" }}
   <p>Hi, This is {{ name }}'s website.</p>
 
-  {{ photos_begin }}
+  {{ photos }}
   <image>{{ photo.path }}</image>
-  {{ photos_end }}
+  {{ photos }}
 </body>
 ```
