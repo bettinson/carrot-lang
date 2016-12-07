@@ -12,34 +12,30 @@ class PreProcessor
     input_file.each_line do |line|
       process_line(line)
     end
-    @all_tokens.each do |s|
-      puts s.value + "\t" + s.type.to_s unless s.class != Token
-    end
+    # @all_tokens.each do |s|
+    #   puts s.value + "\t" + s.type.to_s unless s.class != Token
+    # end
     return @hash
   end
 
   def self.create_html_from_crt(filepath)
     hash_table = process_file(filepath)
     name = File.basename(filepath, ".html.crt")
-
-    input_file=File.open(filepath).read
-
     # Uses stack to create HTML tags. 
     html_stack = Array.new
 
-    index = 0
     File.open(name + ".html", 'w') do |f|
       @all_tokens.each_with_index do |t, index|
         next_token = @all_tokens[index+1] unless @all_tokens[index+1].nil?
         if t.type == :word
           if hash_table.has_key?(t.value)
             # Ignore if variable is an assignment, because we already have the values
-            # Not the best way to do this.
+            # Definetly not the best way to do this.
             if next_token.type != :equals
               f << " " << hash_table[t.value.to_s]
             end
           else
-            if t.value == ',' or t.value == "'"
+            if t.value == ',' or t.value == '\''
               f << t.value.to_s 
             else
               f << " " << t.value.to_s
@@ -58,7 +54,7 @@ class PreProcessor
         # else # TODO: Don't add variable declarations
         #   f << t.value.to_s 
         # end
-      end
+        end
         if t.type == :non_syntax or t.type == :end_bracket
           f << "\n"
         end

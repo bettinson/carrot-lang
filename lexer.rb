@@ -25,7 +25,9 @@ class Lexer
         inQuotes ? inQuotes = false : inQuotes = true
         current_word << s
       when ' '
-        current_word << s unless !inQuotes
+        tokens << Token.new(current_word, :word) unless current_word == ""
+        current_word = ""
+        tokens << Token.new(s, :space) 
       when '<'
         current_word << s
         inTag = true
