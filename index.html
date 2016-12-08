@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Carrot-lang by bettinson</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Carrot-lang</h1>
+        <p>A simple template language.</p>
+
+        <p class="view"><a href="https://github.com/bettinson/carrot-lang">View the Project on GitHub <small>bettinson/carrot-lang</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/bettinson/carrot-lang/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/bettinson/carrot-lang/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/bettinson/carrot-lang">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="carrot-lang" class="anchor" href="#carrot-lang" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>carrot-lang</h1>
+
+<p>This is Carrot lang. Carrot is a simple templating language that can be embedded into HTML. Right now, I'm working on using this for Imageup for custom user pages. Use file extension <code>.html.crt</code> and run <code>preprocessor.rb</code> to use it.</p>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>Embed carrot in html between <code>{{ }}</code>. Note, this does not work at all yet. Like, not even a little bit.</p>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">body</span>&gt;
+  {{ name="Matt" }}
+  &lt;<span class="pl-ent">p</span>&gt;Hi, This is {{ name }}'s website.&lt;/<span class="pl-ent">p</span>&gt;
+
+  {{ photos }}
+  &lt;<span class="pl-ent">image</span>&gt;{{ photo.path }}&lt;/<span class="pl-ent">image</span>&gt;
+  {{ photos }}
+&lt;/<span class="pl-ent">body</span>&gt;</pre></div>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/bettinson">bettinson</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
