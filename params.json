@@ -1,6 +1,6 @@
 {
   "name": "Carrot-lang",
   "tagline": "A simple template language.",
-  "body": "# carrot-lang\r\n\r\nThis is Carrot lang. Carrot is a simple templating language that can be embedded into HTML. Right now, I'm working on using this for Imageup for custom user pages. Use file extension `.html.crt` and run `preprocessor.rb` to use it.\r\n\r\n## Usage\r\n\r\nEmbed carrot in html between `{{ }}`. Note, this does not work at all yet. Like, not even a little bit.\r\n\r\n```html\r\n<body>\r\n  {{ name=\"Matt\" }}\r\n  <p>Hi, This is {{ name }}'s website.</p>\r\n\r\n  {{ photos }}\r\n  <image>{{ photo.path }}</image>\r\n  {{ photos }}\r\n</body>\r\n```\r\n",
+  "body": "# carrot-lang\r\n\r\nThis is Carrot lang. Carrot is a simple templating language that can be embedded into HTML. Right now, I'm working on using this for Imageup for custom user pages. Use file extension `.html.crt` and run `preprocessor.rb` to use it.\r\n\r\n## Usage\r\n\r\nEmbed carrot in html between `{{ }}`.\r\n\r\n```html\r\n<body>\r\n  {{ name=\"Matt\" }}\r\n  <p>Hi, This is {{ name }}'s website.</p>\r\n\r\n  {{ photos }}\r\n  <img src={{ photo.path }}>\r\n  {{ photos }}\r\n</body>\r\n```\r\n\r\nThis will output the following `html`, eventually:\r\n\r\n```html\r\n<body>\r\n  <p>Hi, This is Matt's website.</p>\r\n\r\n  <img src=\"photo1.jpg\", alt=\"1\", height=\"50\", width=\"100\">\r\n  <img src=\"photo2.jpg\", alt=\"2\", height=\"50\", width=\"70\">\r\n</body>\r\n```",
   "note": "Don't delete this file! It's used internally to help with page regeneration."
 }
