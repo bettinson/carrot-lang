@@ -3,18 +3,17 @@ require './lexer.rb'
 
 class PreProcessor
   def self.process_file(filepath)
-    @all_tokens = Array.new
-    @hash = Hash.new
-    @processed_lines = Array.new
-
+    setup
     input_file=File.open(filepath).read
-
     input_file.each_line do |line|
       process_line(line)
     end
-    # @all_tokens.each do |s|
-    #   puts s.value + "\t" + s.type.to_s unless s.class != Token
-    # end
+    return @hash
+  end
+
+  def self.process_string(string)
+    setup
+    process_line(string)
     return @hash
   end
 
@@ -63,6 +62,12 @@ class PreProcessor
   end
 
   private
+  def self.setup
+    @all_tokens = Array.new
+    @hash = Hash.new
+    @processed_lines = Array.new
+  end
+
   def self.process_line(line)
     tokens = Lexer.lex line
     tokens.select{|c| c.class == Token }.each do |s|
@@ -100,7 +105,7 @@ class PreProcessor
   end
 end
 
-PreProcessor.create_html_from_crt("test.html.crt")
+# PreProcessor.create_html_from_crt("test.html.crt")
 
 # PreProcessor.process_line('{{var = "Matt", var, name = "mat", var = "Hey", var}}')
 
