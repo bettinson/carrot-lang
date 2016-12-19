@@ -8,7 +8,7 @@ Embed carrot in html between `{{ }}`. Note, this does not work at all yet. Like,
 
 ```html
 <body>
-  {{ name = "Matt" }}
+  {{ name="Matt" }}
   <p>Hi, This is {{ name }}'s website.</p>
 
   {{ photos }}
