@@ -42,7 +42,6 @@ class PreProcessor
           end
         end
         if t.type == :html_tag 
-          # f << "\n"
           if html_stack.last == t.value
             html_stack.pop 
             f <<  t.value.to_s
@@ -50,9 +49,6 @@ class PreProcessor
             html_stack << t.value
             f <<  t.value.to_s
           end
-        # else # TODO: Don't add variable declarations
-        #   f << t.value.to_s 
-        # end
         end
         if t.type == :non_syntax or t.type == :end_bracket
           f << "\n"

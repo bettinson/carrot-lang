@@ -14,6 +14,18 @@ class LexerTest < Test::Unit::TestCase
       index = index + 1
     end
   end
+
+  def test_errors_on_reserved_word_assignment
+    assert_raise ArgumentError do
+      Lexer.lex('{{photos="Matt\'s blog"}}')
+    end
+  end
+
+  def test_no_errors_on_keyword_usage
+    assert_nothing_raised do
+      Lexer.lex('{{ photos }}')
+    end
+  end
 end
 
 class PreProcessorTest < Test::Unit::TestCase
