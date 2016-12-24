@@ -1,57 +1,57 @@
 require 'byebug'
 require './lexer.rb'
 
+# Processes the symbols into an html file
 class PreProcessor
   def self.process_file(filepath)
     setup
-    input_file=File.open(filepath).read
+    input_file = File.open(filepath).read
     input_file.each_line do |line|
       process_line(line)
     end
-    return @hash
+    @hash
   end
 
   def self.process_string(string)
     setup
     process_line(string)
-    return @hash
+    @hash
   end
 
   def self.create_html_from_crt(filepath)
     hash_table = process_file(filepath)
-    name = File.basename(filepath, ".html.crt")
-    # Uses stack to create HTML tags. 
-    html_stack = Array.new
-
-    File.open(name + ".html", 'w') do |f|
+    name = File.basename(filepath, '.html.crt')
+    # Uses stack to create HTML tags.
+    html_stack = []
+    File.open(name + '.html', 'w') do |f|
       @all_tokens.each_with_index do |t, index|
-        next_token = @all_tokens[index+1] unless @all_tokens[index+1].nil?
+        next_token = @all_tokens[index + 1] unless @all_tokens[index + 1].nil?
         if t.type == :word
-          if hash_table.has_key?(t.value)
-            # Ignore if variable is an assignment, because we already have the values
+          if hash_table.key?(t.value)
+            # Ignore if variable is an assignment, because we already have values
             # Definetly not the best way to do this.
             if next_token.type != :equals
-              f << " " << hash_table[t.value.to_s]
+              f << ' ' << hash_table[t.value.to_s]
             end
           else
             if t.value == ',' or t.value == '\''
               f << t.value.to_s 
             else
-              f << " " << t.value.to_s
+              f << ' ' << t.value.to_s
             end
           end
         end
-        if t.type == :html_tag 
+        if t.type == :html_tag
           if html_stack.last == t.value
-            html_stack.pop 
+            html_stack.pop
             f <<  t.value.to_s
           else
             html_stack << t.value
             f <<  t.value.to_s
           end
         end
-        if t.type == :non_syntax or t.type == :end_bracket
-          f << "\n"
+        if t.type == :non_syntax || t.type == :end_bracket
+          f << '\n'
         end
       end
     end
@@ -100,9 +100,4 @@ class PreProcessor
     return processed_string
   end
 end
-
-# PreProcessor.create_html_from_crt("test.html.crt")
-
-# PreProcessor.process_line('{{var = "Matt", var, name = "mat", var = "Hey", var}}')
-
 

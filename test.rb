@@ -17,7 +17,7 @@ class LexerTest < Test::Unit::TestCase
 
   def test_errors_on_reserved_word_assignment
     assert_raise ArgumentError do
-      Lexer.lex('{{photos="Matt\'s blog"}}')
+      Lexer.lex('{{ photos="Matt\'s blog" }}')
     end
   end
 
