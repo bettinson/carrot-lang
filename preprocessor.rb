@@ -1,5 +1,5 @@
 require 'byebug'
-require './lexer.rb'
+require_relative './lexer.rb'
 
 # Processes the symbols into an html file
 class PreProcessor
@@ -23,6 +23,7 @@ class PreProcessor
     name = File.basename(filepath, '.html.crt')
     # Uses stack to create HTML tags.
     html_stack = []
+
     File.open(name + '.html', 'w') do |f|
       @all_tokens.each_with_index do |t, index|
         next_token = @all_tokens[index + 1] unless @all_tokens[index + 1].nil?
@@ -41,14 +42,10 @@ class PreProcessor
             end
           end
         end
-        if t.type == :html_tag
-          if html_stack.last == t.value
-            html_stack.pop
-            f <<  t.value.to_s
-          else
-            html_stack << t.value
-            f <<  t.value.to_s
-          end
+        # Checking if HTML is valid. oops THIS IS AN ANITI PATTERN. DONT CHECK
+        # HTML AND ASSUME THE USER WILL PASS IN ARBITRARY STRINGS.
+        if t.type == :string
+          f <<  t.value.to_s
         end
         if t.type == :non_syntax || t.type == :end_bracket
           f << '\n'
@@ -101,3 +98,4 @@ class PreProcessor
   end
 end
 
+PreProcessor.create_html_from_crt("hey.html.crt")
