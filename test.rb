@@ -9,6 +9,7 @@ class LexerTest < Test::Unit::TestCase
   def setup
     @str = "{{hello}}"
     @stream = StringStream.new(@str)
+    @lexer = Lexer.new(@str)
   end
 
   def test_string_stream
@@ -22,6 +23,18 @@ class LexerTest < Test::Unit::TestCase
 
     assert_equal '{', @stream.front
   end
+
+  def test_front_of_lexer
+    assert_equal @lexer.next_token.value, '{{'
+  end
+
+  def test_string_before_syntax
+    str = "hello {{ }}"
+    @lexer = Lexer.new(str)
+    assert_equal @lexer.next_token.value, 'hello '
+    assert_equal @lexer.next_token.value, '{{'
+  end
+
 #  def test_simple_token_array
 #    toks = Lexer.lex('{{title="Matt\'s blog"}}')
 #    test_array = ["{{", "title", "=", '"', "Matt's"," ","blog", '"', "}}"]

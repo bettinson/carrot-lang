@@ -1,11 +1,16 @@
-# require 'byebug'
+require 'byebug'
 
 # TODO 
 # Create string stream and lexer and lexerstream
 #
+
+# Encapsulates dealing with a chunk of syntax
 class StringStream
+  attr_accessor :in_syntax
+
   def initialize(string)
     @string = string
+    @in_syntax = false
   end
 
   def front
@@ -14,6 +19,10 @@ class StringStream
 
   def pop_front
     @string = @string[1, @string.size]
+  end
+
+  def in_syntax?
+    @in_syntax
   end
 
   def string
@@ -30,7 +39,40 @@ class Token
   end
 end
 
-stream = StringStream.new("{{hello}}")
+class Lexer
+  def initialize(string)
+    @stream = StringStream.new(string)
+    @tokens = []
+  end
+
+  def next_token()
+
+    case @stream.front
+    when '{'
+      if @stream.front == '{'
+        @stream.pop_front
+        return Token.new('{{', :begin_bracket)
+      end
+    when '}'
+      @stream.pop_front
+      if @stream.front == '}'
+        @stream.pop_front
+        @stream.in_syntax = false
+        return Token.new('}}', :end_bracket)
+      end
+    end
+
+    if !@stream.in_syntax?
+      non_syntax_string = ''
+      until @stream.front == '{' || @stream.front == nil
+        non_syntax_string << @stream.front
+        @stream.pop_front
+      end
+      @stream.in_syntax = true
+      return Token.new(non_syntax_string, :non_syntax)
+    end
+  end
+end
 
 # Handles translation from .html.crt files to a string of tokens
 #class Lexer
