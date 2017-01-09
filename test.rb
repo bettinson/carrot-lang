@@ -35,6 +35,13 @@ class LexerTest < Test::Unit::TestCase
     assert_equal @lexer.next_token.value, '{{'
   end
 
+  def test_variable_assignment_tokens
+    str = "{{ hey = 'foo'; }}"
+    @lexer = Lexer.new(str)
+    assert_equal @lexer.next_token.value, '{{'
+    # assert_equal @lexer.next_token.value, 'hey'
+  end
+
 #  def test_simple_token_array
 #    toks = Lexer.lex('{{title="Matt\'s blog"}}')
 #    test_array = ["{{", "title", "=", '"', "Matt's"," ","blog", '"', "}}"]
