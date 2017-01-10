@@ -35,11 +35,32 @@ class LexerTest < Test::Unit::TestCase
     assert_equal @lexer.next_token.value, '{{'
   end
 
-  def test_variable_assignment_tokens
-    str = "{{ hey = 'foo'; }}"
+  def test_variable_assignment_tokens_on_left_side
+    str = "this can be absolutely anything. {{ hey = 'foo'; }}"
+    @lexer = Lexer.new(str)
+    assert_equal @lexer.next_token.value, 'this can be absolutely anything. '
+    assert_equal @lexer.next_token.value, '{{'
+    assert @lexer.stream.in_syntax?
+    assert_equal @lexer.next_token.value, 'hey'
+    assert_equal @lexer.next_token.value, '='
+    assert_equal @lexer.next_token.value, "'foo'"
+    assert_equal @lexer.next_token.value, ';'
+    assert_equal @lexer.next_token.value, '}}'
+    # assert !@lexer.stream.in_syntax?
+  end
+
+  def test_right_side_is_not_syntax
+    str = "{{hey = 'foo hey';}} this is not syntax"
     @lexer = Lexer.new(str)
     assert_equal @lexer.next_token.value, '{{'
-    # assert_equal @lexer.next_token.value, 'hey'
+    assert @lexer.stream.in_syntax?
+    assert_equal @lexer.next_token.value, 'hey'
+    assert_equal @lexer.next_token.value, '='
+    assert_equal @lexer.next_token.value, "'foo hey'"
+    assert_equal @lexer.next_token.value, ';'
+    assert_equal @lexer.next_token.value, '}}'
+    assert_equal @lexer.next_token.value, ' this is not syntax'
+    assert !@lexer.stream.in_syntax
   end
 
 #  def test_simple_token_array

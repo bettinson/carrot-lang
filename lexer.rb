@@ -3,10 +3,12 @@ require 'byebug'
 # Encapsulates dealing with a chunk of syntax
 class StringStream
   attr_accessor :in_syntax
+  attr_accessor :in_quotes
 
   def initialize(string)
     @string = string
     @in_syntax = false
+    @in_quotes = false
   end
 
   def front
@@ -19,6 +21,10 @@ class StringStream
 
   def in_syntax?
     @in_syntax
+  end
+
+  def in_quotes?
+    @in_quotes
   end
 
   def string
@@ -36,13 +42,13 @@ class Token
 end
 
 class Lexer
+  attr_reader :stream
   def initialize(string)
     @stream = StringStream.new(string)
     @tokens = []
   end
 
   def next_token()
-    # byebug
     case @stream.front
     when '{'
       @stream.pop_front
@@ -61,29 +67,39 @@ class Lexer
     when '='
       @stream.pop_front
       return Token.new('=', :equals)
-    else
-      if @stream.in_syntax?
-        # EG: {{ variable = "foo"; }}
-        # Where ';' denotes the end of variable assignment.
-        variable_string = ''
-
-        while @stream.front != nil || @stream.front != ';' || @stream.front != '='
-          variable_string << @stream.front unless @stream.front == ' '
-          @stream.pop_front
-        end
-
-        return Token.new(variable_string, :variable)
-      end
+    when ';'
+      @stream.pop_front
+      return Token.new(';', :semi_colon)
+      # Grab the variable in quotes
     end
 
+# TODO
+# get right side non_syntax_string
     if !@stream.in_syntax?
       non_syntax_string = ''
       until @stream.front == '{' || @stream.front == nil
         non_syntax_string << @stream.front
         @stream.pop_front
       end
-      @stream.in_syntax = true
       return Token.new(non_syntax_string, :non_syntax)
+    else
+      # EG: {{ variable = "foo"; }}
+      # Where ';' denotes the end of variable assignment.
+      variable_string = ''
+      loop {
+        if @stream.front == "'" and @stream.in_quotes?
+          @stream.in_quotes = false
+        elsif @stream.front == "'" and !@stream.in_quotes?
+          @stream.in_quotes = true
+        end
+
+        if @stream.front == nil || @stream.front == ';' || @stream.front == '='
+          @stream.in_quotes = false
+          return Token.new(variable_string, :variable)
+        end
+        variable_string << @stream.front unless @stream.front == ' ' and !@stream.in_quotes
+        @stream.pop_front
+      }
     end
   end
 end
