@@ -9,7 +9,7 @@ class LexerTest < Test::Unit::TestCase
   def setup
     @str = "{{hello}}"
     @stream = StringStream.new(@str)
-    @lexer = Lexer.new(@str)
+    @lexer = LexerStream.new(@str)
   end
 
   def test_string_stream
@@ -30,14 +30,14 @@ class LexerTest < Test::Unit::TestCase
 
   def test_string_before_syntax
     str = "hello {{ }}"
-    @lexer = Lexer.new(str)
+    @lexer = LexerStream.new(str)
     assert_equal @lexer.next_token.value, 'hello '
     assert_equal @lexer.next_token.value, '{{'
   end
 
   def test_variable_assignment_tokens_on_left_side
     str = "this can be absolutely anything. {{ hey = 'foo'; }}"
-    @lexer = Lexer.new(str)
+    @lexer = LexerStream.new(str)
     assert_equal @lexer.next_token.value, 'this can be absolutely anything. '
     assert_equal @lexer.next_token.value, '{{'
     assert @lexer.stream.in_syntax?
@@ -51,7 +51,7 @@ class LexerTest < Test::Unit::TestCase
 
   def test_right_side_is_not_syntax
     str = "{{hey = 'foo hey';}} this is not syntax"
-    @lexer = Lexer.new(str)
+    @lexer = LexerStream.new(str)
     assert_equal @lexer.next_token.value, '{{'
     assert @lexer.stream.in_syntax?
     assert_equal @lexer.next_token.value, 'hey'

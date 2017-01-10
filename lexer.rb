@@ -41,7 +41,7 @@ class Token
   end
 end
 
-class Lexer
+class LexerStream
   attr_reader :stream
   def initialize(string)
     @stream = StringStream.new(string)
