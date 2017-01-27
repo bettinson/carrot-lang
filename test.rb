@@ -86,19 +86,15 @@ class LexerTest < Test::Unit::TestCase
 #  end
 end
 
-#class PreProcessorTest < Test::Unit::TestCase
+# class PreProcessorTest < Test::Unit::TestCase
 #  def setup
 #  end
-#
+
 #  def test_basic_var_assignment
 #    test_hash = Hash.new
+#    processer = Preprocessor.new()
 #    test_hash["var"] = "Matt"
-#    assert_equal PreProcessor.process_string('{{var="Matt"}}'), test_hash
+#    assert_equal processer.process_string('{{var="Matt"}}'), test_hash
+  
 #  end
-#
-#  def test_var_assignment_then_overwrite
-#    test_hash = Hash.new
-#    test_hash["var"] = "Hat"
-#    assert_equal PreProcessor.process_string('{{var="Matt", var="Hat"}}'), test_hash
-#  end
-#end
+# end

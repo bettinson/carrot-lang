@@ -1,6 +1,7 @@
 require 'byebug'
 
 # Encapsulates dealing with a chunk of syntax
+
 class StringStream
   attr_accessor :in_syntax
   attr_accessor :in_quotes
@@ -73,8 +74,6 @@ class LexerStream
       # Grab the variable in quotes
     end
 
-# TODO
-# get right side non_syntax_string
     if !@stream.in_syntax?
       non_syntax_string = ''
       until @stream.front == '{' || @stream.front == nil
