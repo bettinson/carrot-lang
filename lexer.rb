@@ -1,7 +1,4 @@
-require 'byebug'
-
 # Encapsulates dealing with a chunk of syntax
-
 class StringStream
   attr_accessor :in_syntax
   attr_accessor :in_quotes
@@ -96,7 +93,7 @@ class LexerStream
           @stream.in_quotes = false
           return Token.new(variable_string, :variable)
         end
-        variable_string << @stream.front  unless @stream.front == ' ' and !@stream.in_quotes
+        variable_string << @stream.front unless @stream.in_quotes
         @stream.pop_front
       }
     end

@@ -1,4 +1,3 @@
-require 'byebug'
 require_relative './lexer.rb'
 
 # Processes the symbols into an html file
@@ -6,22 +5,17 @@ require_relative './lexer.rb'
 class Preprocessor
   attr_reader :variables
 
-  def initialize()
+  def self.create_html_file(crt_string, user)
     @tokens = []
     @variables = {}
-  end
-
-  def create_html_file(crt_file)
-    @file = File.new('output.html', 'w')
-
-    crt = File.open(crt_file, 'r')
-    crt.each_line do |line|
-      process(line)
-    end
+    @text = ""
+    @user = user
+    self.process(crt_string)
+    return @text
   end
 
   private
-  def process(line)
+  def self.process(line)
     @token_stream = LexerStream.new(line)
 
     while @token_stream.stream.front != nil
@@ -34,6 +28,32 @@ class Preprocessor
       token = @tokens[i]
       case token.type
       when :variable
+        if token.value == "photos"
+          # byebug
+          i+=1
+          while 1
+            token = @tokens[i]
+            if token.nil?
+              return
+            end
+
+            if token.type == :variable
+              if token.value == "photo" # We are doing something with a single photo
+                # for production, path needs to be "/i/"
+                # TODO: No <% end %> in sight
+                @user.images.reverse.each do |image|
+                  @text << '<p>' + image.title + '</p>'
+                  @text << '<div class="image_container">
+                          <img src= "/images/' + image.path + '" alt="Image">
+                          </div>'
+                end
+                token = @tokens[i]
+              end
+            end
+            i+=1
+          end
+          i+=1
+        end
         if @tokens[i + 1] != nil && @tokens[i + 1].type == :equals
           i += 1
           if @tokens[i + 1] != nil && @tokens[i + 1].type == :variable
@@ -42,19 +62,14 @@ class Preprocessor
           end
         end
         if @variables.has_key? @tokens[i].value
-          @file.write(@variables[@tokens[i].value])
+          @text << @variables[@tokens[i].value][1...-1]
         else
           puts @tokens[i].value + " " + @variables.to_s
         end
       when :non_syntax
-        @file.write(token.value)
+        @text << token.value
       end
     end
     @tokens = []
   end
 end
-
-
-processer = Preprocessor.new()
-processer.create_html_file('./hey.html.crt')
-puts processer.variables
